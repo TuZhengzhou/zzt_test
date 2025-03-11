@@ -1,0 +1,21 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "type": "cppbuild",
+            "label": "build_code_split",    // 
+            "command": "g++",
+            "args": [
+                "-g",                   // 使得可执行文件可调试
+                "-Iinc2",               // 其他编译参数
+                "-Iincludes",
+                "-Wl,-rpath=${workspaceFolder}/lib",
+                "code_split_src_call.cpp",
+                "-o",
+                "code_split",
+                "-L${workspaceFolder}/lib",
+                "-lcode_split_src_def"
+            ],
+        }
+    ]
+}
