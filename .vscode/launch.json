@@ -5,10 +5,10 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "run_code_split",
+            "name": "class_size",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/code_split",
+            "program": "${workspaceFolder}/cpp/cpp_basic/heritate_polymorphism/build/class_size",
             "cwd": "${fileDirname}",
             "externalConsole": false,
             "MIMode": "gdb",
@@ -24,7 +24,239 @@
                     "ignoreFailures": true
                 }
             ],
-            "preLaunchTask": "build_code_split"       
+            "preLaunchTask": "build_class_size"
+        },
+        {
+            "name": "run_lc_23 ",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/leet_code/build/lc_23",
+            "cwd": "${fileDirname}",
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "为 gdb 启用整齐打印",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "将反汇编风格设置为 Intel",
+                    "text": "-gdb-set disassembly-flavor intel",
+                    "ignoreFailures": true
+                }
+            ],
+            "preLaunchTask": "build_lc_23"       
+        },{
+            "name": "run_lc_46 ",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/leet_code/build/lc_46",
+            "cwd": "${fileDirname}",
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "为 gdb 启用整齐打印",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "将反汇编风格设置为 Intel",
+                    "text": "-gdb-set disassembly-flavor intel",
+                    "ignoreFailures": true
+                }
+            ],
+            "preLaunchTask": "build_lc_46"       
+        },{
+            "name": "run_lc_79 ",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/leet_code/build/lc_79",
+            "cwd": "${fileDirname}",
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "为 gdb 启用整齐打印",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "将反汇编风格设置为 Intel",
+                    "text": "-gdb-set disassembly-flavor intel",
+                    "ignoreFailures": true
+                }
+            ],
+            "preLaunchTask": "build_lc_79"       
+        },{
+            "name": "run_lc_215 ",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/leet_code/build/lc_215",
+            "cwd": "${fileDirname}",
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "为 gdb 启用整齐打印",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "将反汇编风格设置为 Intel",
+                    "text": "-gdb-set disassembly-flavor intel",
+                    "ignoreFailures": true
+                }
+            ],
+            "preLaunchTask": "build_lc_215"       
+        },{
+            "name": "run_lc_4 ",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/leet_code/build/lc_4",
+            "cwd": "${fileDirname}",
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "为 gdb 启用整齐打印",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "将反汇编风格设置为 Intel",
+                    "text": "-gdb-set disassembly-flavor intel",
+                    "ignoreFailures": true
+                }
+            ],
+            "preLaunchTask": "build_lc_4"       
+        },{
+            "name": "run_lc_394 ",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/leet_code/build/lc_394",
+            "cwd": "${fileDirname}",
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "为 gdb 启用整齐打印",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "将反汇编风格设置为 Intel",
+                    "text": "-gdb-set disassembly-flavor intel",
+                    "ignoreFailures": true
+                }
+            ],
+            "preLaunchTask": "build_lc_394"       
+        },{
+            "name": "run_lc_416 ",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/leet_code/build/lc_416",
+            "cwd": "${fileDirname}",
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "为 gdb 启用整齐打印",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "将反汇编风格设置为 Intel",
+                    "text": "-gdb-set disassembly-flavor intel",
+                    "ignoreFailures": true
+                }
+            ],
+            "preLaunchTask": "build_lc_416"       
+        },{
+            "name": "run_lc_437 ",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/leet_code/build/lc_437",
+            "cwd": "${fileDirname}",
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "为 gdb 启用整齐打印",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "将反汇编风格设置为 Intel",
+                    "text": "-gdb-set disassembly-flavor intel",
+                    "ignoreFailures": true
+                }
+            ],
+            "preLaunchTask": "build_lc_437"       
+        },{
+            "name": "run_lc_15 ",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/leet_code/build/lc_15",
+            "cwd": "${fileDirname}",
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "为 gdb 启用整齐打印",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "将反汇编风格设置为 Intel",
+                    "text": "-gdb-set disassembly-flavor intel",
+                    "ignoreFailures": true
+                }
+            ],
+            "preLaunchTask": "build_lc_15"       
+        },{
+            "name": "run_lc_54 ",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/leet_code/build/lc_54",
+            "cwd": "${fileDirname}",
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "为 gdb 启用整齐打印",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "将反汇编风格设置为 Intel",
+                    "text": "-gdb-set disassembly-flavor intel",
+                    "ignoreFailures": true
+                }
+            ],
+            "preLaunchTask": "build_lc_54"       
+        },{
+            "name": "check_point",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceRoot}/check_point",
+            "cwd": "${fileDirname}",
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "为 gdb 启用整齐打印",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "将反汇编风格设置为 Intel",
+                    "text": "-gdb-set disassembly-flavor intel",
+                    "ignoreFailures": true
+                }
+            ],
+            "preLaunchTask": "build_check_point"
         }
 
     ]

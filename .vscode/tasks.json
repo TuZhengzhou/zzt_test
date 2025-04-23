@@ -3,19 +3,135 @@
     "tasks": [
         {
             "type": "cppbuild",
-            "label": "build_code_split",    // 
+            "label": "build_class_size",    // 
             "command": "g++",
             "args": [
                 "-g",                   // 使得可执行文件可调试
-                "-Iinc2",               // 其他编译参数
-                "-Iincludes",
-                "-Wl,-rpath=${workspaceFolder}/lib",
-                "code_split_src_call.cpp",
+                "cpp/cpp_basic/heritate_polymorphism/class_size.cpp",
                 "-o",
-                "code_split",
-                "-L${workspaceFolder}/lib",
-                "-lcode_split_src_def"
+                "cpp/cpp_basic/heritate_polymorphism/build/class_size",
             ],
+        },
+        {
+            "type": "cppbuild",
+            "label": "build_lc_23",    // 
+            "command": "g++",
+            "args": [
+                "-g",                   // 使得可执行文件可调试
+                "leet_code/lc_23.cpp",
+                "-o",
+                "leet_code/build/lc_23",
+            ],
+        },
+        {
+            "type": "cppbuild",
+            "label": "build_lc_46",    // 
+            "command": "g++",
+            "args": [
+                "-g",                   // 使得可执行文件可调试
+                "leet_code/lc_46.cpp",
+                "-o",
+                "leet_code/build/lc_46",
+            ],
+        },
+        {
+            "type": "cppbuild",
+            "label": "build_lc_79",    // 
+            "command": "g++",
+            "args": [
+                "-g",                   // 使得可执行文件可调试
+                "leet_code/lc_79.cpp",
+                "-o",
+                "leet_code/build/lc_79",
+            ],
+        },
+        {
+            "type": "cppbuild",
+            "label": "build_lc_215",    // 
+            "command": "g++",
+            "args": [
+                "-g",                   // 使得可执行文件可调试
+                "leet_code/lc_215.cpp",
+                "-o",
+                "leet_code/build/lc_215",
+            ],
+        },
+        {
+            "type": "cppbuild",
+            "label": "build_lc_4",    // 
+            "command": "g++",
+            "args": [
+                "-g",                   // 使得可执行文件可调试
+                "leet_code/lc_4.cpp",
+                "-o",
+                "leet_code/build/lc_4",
+            ],
+        },
+        {
+            "type": "cppbuild",
+            "label": "build_lc_394",    // 
+            "command": "g++",
+            "args": [
+                "-g",                   // 使得可执行文件可调试
+                "leet_code/lc_394.cpp",
+                "-o",
+                "leet_code/build/lc_394",
+            ],
+        },
+        {
+            "type": "cppbuild",
+            "label": "build_lc_416",    // 
+            "command": "g++",
+            "args": [
+                "-g",                   // 使得可执行文件可调试
+                "leet_code/lc_416.cpp",
+                "-o",
+                "leet_code/build/lc_416",
+            ],
+        },
+        {
+            "type": "cppbuild",
+            "label": "build_lc_437",    // 
+            "command": "g++",
+            "args": [
+                "-g",                   // 使得可执行文件可调试
+                "leet_code/lc_437.cpp",
+                "-o",
+                "leet_code/build/lc_437",
+            ],
+        },
+        {
+            "type": "cppbuild",
+            "label": "build_lc_15",    // 
+            "command": "g++",
+            "args": [
+                "-g",                   // 使得可执行文件可调试
+                "leet_code/lc_15.cpp",
+                "-o",
+                "leet_code/build/lc_15",
+            ],
+        },
+        {
+            "type": "cppbuild",
+            "label": "build_lc_54",    // 
+            "command": "g++",
+            "args": [
+                "-g",                   // 使得可执行文件可调试
+                "leet_code/lc_54.cpp",
+                "-o",
+                "leet_code/build/lc_54",
+            ],
+        },
+        {
+            "label": "build_check_point",
+            "type": "cppbuild",
+            "command": "g++",
+            "args": [
+                "-g",
+                "check_point.cpp",
+                "-o",
+                "check_point"
+            ]
         }
     ]
 }
