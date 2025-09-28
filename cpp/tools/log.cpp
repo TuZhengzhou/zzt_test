@@ -14,7 +14,7 @@ inline std::string safe_format(const char *format, Args &&...args)
   }
   catch (const std::exception &e)
   {
-    return fmt::format("[Format Error: {}]: {}", e.what(), format);
+    return fmt::format("[Format Error: {}]: '{}'", e.what(), format);
   }
 }
 
