@@ -3,6 +3,8 @@
 #include <list>
 #include <stack>
 #include <vector>
+#include <deque>
+#include <queue>
 
 using namespace std;
 
@@ -10,91 +12,125 @@ int main()
 {
 
   {
-    string tag = "int can be sorted. using std::sort() for vector<int>";
+    string tag = "int can be sorted. using sort() for vector<int>";
     printf("%s\n", tag.c_str());
 
-    std::vector<int> vec{3, 1, 2, 4, 5};
+    vector<int> vec{3, 1, 2, 4, 5};
     printf("before: ");
     for (int i = 0; i < vec.size(); i++)
     {
-      std::cout << "[" << vec[i] << "], ";
+      cout << "[" << vec[i] << "], ";
     }
-    std::cout << std::endl << std::endl;
+    cout << endl;
 
-    std::sort(vec.begin(), vec.end());
+    sort(vec.begin(), vec.end());
 
     printf("after : ");
     for (int i = 0; i < vec.size(); i++)
     {
-      std::cout << "[" << vec[i] << "], ";
+      cout << "[" << vec[i] << "], ";
     }
-    std::cout << std::endl << std::endl;
+    cout << endl << endl;
   }
 
   {
-    string tag = "vector can be sorted. using std::sort() for vector<vector<int>>";
+    string tag = "int can be sorted. using sort() for deque<int>";
     printf("%s\n", tag.c_str());
 
-    std::vector<std::vector<int>> vecs{{1, 2}, {1}, {2}, {}};
+    deque<int> deq{3, 1, 2, 4, 5};
+    printf("before: ");
+    for (int i = 0; i < deq.size(); i++)
+    {
+      cout << "[" << deq[i] << "], ";
+    }
+    cout << endl;
+
+    sort(deq.begin(), deq.end());
+
+    printf("after : ");
+    for (int i = 0; i < deq.size(); i++)
+    {
+      cout << "[" << deq[i] << "], ";
+    }
+    cout << endl << endl;
+  }
+
+  {
+    string tag = "char can be sorted. using sort() for basic_string<char>";
+    printf("%s\n", tag.c_str());
+
+    string s = "hello world";
+    cout << "before: " << s << endl;
+
+    sort(s.begin(), s.end());
+
+    cout << "after : " << s << endl << endl;
+  }
+
+  {
+    string tag = "vector can be sorted. using sort() for vector<vector<int>>";
+    printf("%s\n", tag.c_str());
+
+    vector<vector<int>> vecs{{1, 2}, {1}, {2}, {}};
     printf("before: ");
     for (int i = 0; i < vecs.size(); i++)
     {
-      std::cout << "[";
+      cout << "[";
       for_each(vecs[i].begin(), vecs[i].end(), [](int v)
-               { std::cout << v << ", "; });
-      std::cout << "], ";
+               { cout << v << ", "; });
+      cout << "], ";
     }
-    std::cout << std::endl << std::endl;
+    cout << endl;
 
-    std::sort(vecs.begin(), vecs.end());
+    sort(vecs.begin(), vecs.end());
 
     printf("after : ");
     for (int i = 0; i < vecs.size(); i++)
     {
-      std::cout << "[";
+      cout << "[";
       for_each(vecs[i].begin(), vecs[i].end(), [](int v)
-               { std::cout << v << ", "; });
-      std::cout << "], ";
+               { cout << v << ", "; });
+      cout << "], ";
     }
-    std::cout << std::endl << std::endl;
+    cout << endl << endl;
   }
 
   {
     string tag = "list can be sorted. using list.sort() for list<list<int>>";
     printf("%s\n", tag.c_str());
 
-    std::list<std::list<int>> lists{{1, 2}, {1}, {2}, {}};
+    list<list<int>> lists{{1, 2}, {1}, {2}, {}};
 
     printf("before: ");
     for (auto &l : lists)
     {
-      std::cout << "[";
+      cout << "[";
       for_each(l.begin(), l.end(), [](int v)
-               { std::cout << v << ", "; });
-      std::cout << "], ";
+               { cout << v << ", "; });
+      cout << "], ";
     }
-    std::cout << std::endl << std::endl;
+    cout << endl;
 
-    // std::sort(lists.begin(), lists.end());  // list is not random accessable
+    // sort(lists.begin(), lists.end());  // list is not random accessable
     lists.sort(); // list support sort itself
 
     printf("after : ");
     for (auto &l : lists)
     {
-      std::cout << "[";
+      cout << "[";
       for_each(l.begin(), l.end(), [](int v)
-               { std::cout << v << ", "; });
-      std::cout << "], ";
+               { cout << v << ", "; });
+      cout << "], ";
     }
-    std::cout << std::endl << std::endl;
+    cout << endl << endl;
   }
 
   {
-    string tag = "stack can be sorted. using std::sort() for vector<stack<int>>";
+    string tag = "stack can be sorted. using sort() for vector<stack<int>>";
     printf("%s\n", tag.c_str());
 
-    std::stack<int> s;
-    std::vector<std::stack<int>> vec_stack;
+    stack<int> s;
+    vector<stack<int>> vec_stack;
     s.push(2);
     vec_stack.push_back(s); // {2}
     s.pop();
@@ -110,18 +146,18 @@ int main()
     for (auto &l : vec_stack)
     {
       // 栈输出特殊处理，默认后进先出，需调整为先进先出
-      std::vector<int> tmp;
+      vector<int> tmp;
       while (!l.empty())
       {
         tmp.insert(tmp.begin(), l.top());
         l.pop();
       }
-      std::cout << "[";
+      cout << "[";
       for_each(tmp.begin(), tmp.end(), [](int v)
-               { std::cout << v << ", "; });
-      std::cout << "], ";
+               { cout << v << ", "; });
+      cout << "], ";
     }
-    std::cout << std::endl << std::endl;
+    cout << endl;
   
     vec_stack.clear();
     s.push(2);
@@ -134,24 +170,24 @@ int main()
     s.pop();
     s.pop();
     vec_stack.push_back(s); // {}
-    std::sort(vec_stack.begin(), vec_stack.end());
+    sort(vec_stack.begin(), vec_stack.end());
 
     printf("after : ");
     for (auto &l : vec_stack)
     {
       // 栈输出特殊处理，默认后进先出，需调整为先进先出
-      std::vector<int> tmp;
+      vector<int> tmp;
       while (!l.empty())
       {
         tmp.insert(tmp.begin(), l.top());
         l.pop();
       }
-      std::cout << "[";
+      cout << "[";
       for_each(tmp.begin(), tmp.end(), [](int v)
-               { std::cout << v << ", "; });
-      std::cout << "], ";
+               { cout << v << ", "; });
+      cout << "], ";
     }
-    std::cout << std::endl << std::endl;
+    cout << endl << endl;
   }
 
   return 0;
