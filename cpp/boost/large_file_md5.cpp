@@ -135,16 +135,19 @@ static std::pair<std::string, double> md5_streaming(const std::string& path, std
 //.\test.exe z_file_test_900MB.bin --no-generate --chunk-size=1048576
 int main(int argc, char* argv[]) {
 
+    printf("Compile: g++ large_file_md5.cpp -o large_file_md5.a -lboost_system -lpthread -O3\n");
+    printf("Usange: ./large_file_md5.a --no-generate --chunk-size=2048 (default KB)\n");
+
     std::cout << "Boost version: " << BOOST_VERSION << std::endl;
     try {
         // std::ios::sync_with_stdio(false);
         // std::cin.tie(nullptr);
 
-        const std::string file_path = (argc >= 2) ? argv[1] : "z_file_test_900MB.bin";
+        const std::string file_path = "z_file_test_900MB.bin";
         bool generate = true;
         std::size_t chunk_size = 2 * 1024 * 1024; // 默认 2MB
 
-        for (int i = 2; i < argc; ++i) {
+        for (int i = 1; i < argc; ++i) {
             std::string arg = argv[i];
             if (arg == "--no-generate") {
                 generate = false;
@@ -152,7 +155,7 @@ int main(int argc, char* argv[]) {
             else if (arg.rfind("--chunk-size=", 0) == 0) {
                 std::size_t val = std::stoull(arg.substr(13));
                 if (val == 0) throw std::invalid_argument("chunk size must > 0");
-                chunk_size = val;
+                chunk_size = val * 1024;
             }
         }
 
@@ -181,7 +184,7 @@ int main(int argc, char* argv[]) {
         std::cout << "MD5: " << md5_all_2 << "\nTime: " << t_all_2 << " s\n\n";
 
         std::this_thread::sleep_for(std::chrono::seconds(1));
-        std::cout << "=== Step 3: MD5 (streaming, chunk=" << chunk_size << " bytes) ===\n";
+        std::cout << "=== Step 3: MD5 (streaming, chunk=" << chunk_size/1024 << " KB) ===\n";
         auto [md5_stream, t_stream] = md5_streaming(file_path, chunk_size);
         std::cout << "MD5: " << md5_stream << "\nTime: " << t_stream << " s\n\n";
 
