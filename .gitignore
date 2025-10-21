@@ -1,4 +1,5 @@
 */build/
 build/
 *.a
+middleware/redis/
 cpp/boost/z_file_test_900MB.bin

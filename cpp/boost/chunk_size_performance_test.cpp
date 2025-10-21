@@ -61,6 +61,8 @@ int main() {
             // printf("j = %d\n", j);
             auto [hex, duration] = md5_streaming(path, i * 1024);
             total_duration += duration;
+            // 通过 /proc/sys/vm/drop_caches 释放缓存
+            // syscall
         }
         printf("chuck size: %5d, duration: %.2f second\n", i, total_duration/repeat);
     }

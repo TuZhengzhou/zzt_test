@@ -9,6 +9,10 @@
 #include <thread>
 #include <stdexcept>
 
+#include <sys/mman.h>   // mmap, munmap
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 #include <boost/uuid/detail/md5.hpp>  // boost::uuids::detail::md5
 
 // g++ large_file_md5.cpp -o large_file_md5 -lboost_system -lpthread -O3
@@ -106,24 +110,31 @@ static std::pair<std::string, double> md5_all_in_memory_2(const std::string& pat
 // 方式（2）：按块读取，边读边处理
 static std::pair<std::string, double> md5_streaming(const std::string& path, std::size_t chunk_size) {
     auto t0 = Clock::now();
-    std::ifstream ifs(path, std::ios::binary);
-    if (!ifs) throw std::runtime_error("failed to open file: " + path);
 
-    boost::uuids::detail::md5 md5;
+    int fd = open(path.c_str(), O_RDONLY);
+    if (fd == -1) throw std::runtime_error("failed to open file: " + path);
+    struct stat st;
+    if (fstat(fd, &st) == -1) {
+        close(fd);
+        throw std::runtime_error("failed to stat file: " + path);
+    }
+    posix_fadvise(fd, 0, 0, POSIX_FADV_SEQUENTIAL); // 建议内核按顺序读取
+    std::uint64_t size = static_cast<std::uint64_t>(st.st_size);
     std::vector<char> buf(chunk_size);
-
-    while (true) {
-        ifs.read(buf.data(), static_cast<std::streamsize>(buf.size()));
-        std::streamsize got = ifs.gcount();
-        if (got > 0) {
-            md5.process_bytes(buf.data(), static_cast<std::size_t>(got));
-        }
-        if (!ifs) {
-            if (ifs.eof()) break;
+    boost::uuids::detail::md5 md5;
+    std::uint64_t remaining = size;
+    while (remaining > 0) {
+        std::size_t to_read = static_cast<std::size_t>(std::min<std::uint64_t>(remaining, chunk_size));
+        ssize_t got = read(fd, buf.data(), to_read);
+        if (got == -1) {
+            close(fd);
             throw std::runtime_error("read failed (streaming)");
         }
+        if (got == 0) break; // EOF
+        md5.process_bytes(buf.data(), static_cast<std::size_t>(got));
+        remaining -= static_cast<std::uint64_t>(got);
     }
-
+    close(fd);
     boost::uuids::detail::md5::digest_type digest;
     md5.get_digest(digest);
     auto md5_hex = md5_digest_to_hex(digest);
@@ -132,72 +143,40 @@ static std::pair<std::string, double> md5_streaming(const std::string& path, std
     return { md5_hex, std::chrono::duration<double>(t1 - t0).count() };
 }
 
-//.\test.exe z_file_test_900MB.bin --no-generate --chunk-size=1048576
-int main(int argc, char* argv[]) {
-
-    printf("Compile: g++ large_file_md5.cpp -o large_file_md5.a -lboost_system -lpthread -O3\n");
-    printf("Usange: ./large_file_md5.a --no-generate --chunk-size=2048 (default KB)\n");
-
-    std::cout << "Boost version: " << BOOST_VERSION << std::endl;
-    try {
-        // std::ios::sync_with_stdio(false);
-        // std::cin.tie(nullptr);
-
-        const std::string file_path = "z_file_test_900MB.bin";
-        bool generate = true;
-        std::size_t chunk_size = 2 * 1024 * 1024; // 默认 2MB
-
-        for (int i = 1; i < argc; ++i) {
-            std::string arg = argv[i];
-            if (arg == "--no-generate") {
-                generate = false;
-            }
-            else if (arg.rfind("--chunk-size=", 0) == 0) {
-                std::size_t val = std::stoull(arg.substr(13));
-                if (val == 0) throw std::invalid_argument("chunk size must > 0");
-                chunk_size = val * 1024;
-            }
-        }
-
-        const std::uint64_t file_size = 900ULL * 1024ULL * 1024ULL; // 900 MB
-
-        if (generate) {
-            std::cout << "=== Step 1: Generating file (" << file_size << " bytes) ===\n";
-            auto t0 = Clock::now();
-            generate_file(file_path, file_size);
-            auto t1 = Clock::now();
-            std::cout << "File generated: " << file_path
-                << " in " << std::chrono::duration<double>(t1 - t0).count() << " s\n\n";
-        }
-        else {
-            std::cout << "[Skip] File generation.\n";
-        }
-
-        std::this_thread::sleep_for(std::chrono::seconds(1));
-        std::cout << "=== Step 2: MD5 (all-in-memory istreambuf_iterator) ===\n";
-        auto [md5_all_1, t_all_1] = md5_all_in_memory_1(file_path);
-        std::cout << "MD5: " << md5_all_1 << "\nTime: " << t_all_1 << " s\n\n";
-
-        std::this_thread::sleep_for(std::chrono::seconds(1));
-        std::cout << "=== Step 2: MD5 (all-in-memory reserve size) ===\n";
-        auto [md5_all_2, t_all_2] = md5_all_in_memory_2(file_path);
-        std::cout << "MD5: " << md5_all_2 << "\nTime: " << t_all_2 << " s\n\n";
-
-        std::this_thread::sleep_for(std::chrono::seconds(1));
-        std::cout << "=== Step 3: MD5 (streaming, chunk=" << chunk_size/1024 << " KB) ===\n";
-        auto [md5_stream, t_stream] = md5_streaming(file_path, chunk_size);
-        std::cout << "MD5: " << md5_stream << "\nTime: " << t_stream << " s\n\n";
-
-        if (md5_all_2 == md5_stream) {
-            std::cout << "[OK] MD5 matches.\n";
-        }
-        else {
-            std::cout << "[WARN] MD5 differs!\n";
-        }
-        return 0;
+// 方式（3）：mmap + madvise + 按块读取
+static std::pair<std::string, double> md5_mmap_streaming(const std::string& path, std::size_t chunk_size) {
+    auto t0 = Clock::now();
+    int fd = open(path.c_str(), O_RDONLY);
+    if (fd == -1) throw std::runtime_error("failed to open file: " + path);
+    // 获取文件大小
+    struct stat st;
+    if (fstat(fd, &st) == -1) {
+        close(fd);
+        throw std::runtime_error("failed to stat file: " + path);
     }
-    catch (const std::exception& ex) {
-        std::cerr << "Error: " << ex.what() << "\n";
-        return 1;
+    std::uint64_t size = static_cast<std::uint64_t>(st.st_size);
+    
+    char* data = (char*)mmap(nullptr, size, PROT_READ, MAP_PRIVATE, fd, 0);
+    if (data == MAP_FAILED) {
+        close(fd);
+        throw std::runtime_error("mmap failed: " + path);
     }
+    close(fd);
+    // 建议内核按顺序读取
+    madvise(data, size, MADV_SEQUENTIAL);
+    boost::uuids::detail::md5 md5;
+    std::uint64_t offset = 0;
+    while (offset < size) {
+        std::size_t to_process = static_cast<std::size_t>(std::min<std::uint64_t>(chunk_size, size - offset));
+        md5.process_bytes(data + offset, to_process);
+        offset += to_process;
+    }
+    munmap(data, size);
+    boost::uuids::detail::md5::digest_type digest;
+    md5.get_digest(digest);
+    auto md5_hex = md5_digest_to_hex(digest);
+    auto t1 = Clock::now();
+    return { md5_hex, std::chrono::duration<double>(t1 - t0).count() };
 }
+
+// 分块 mmap 
