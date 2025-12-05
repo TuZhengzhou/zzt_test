@@ -1,24 +1,51 @@
 #include <stdio.h>
-#include <sys/mman.h>
+#include <pthread.h>
 #include <unistd.h>
-#include <iostream>
-#include <memory>
+#include <time.h>
+
+void* busy_thread(void* arg) {
+    int id = *(int*)arg;
+    printf("Thread %d: Starting, will run for 0.5 seconds\n", id);
+    
+    // 忙等待 0.5 秒，模拟长时间运行
+    clock_t start = clock();
+    while((clock() - start) * 1000 / CLOCKS_PER_SEC < 500) {
+        // 忙循环
+    }
+    
+    printf("Thread %d: Finished busy work\n", id);
+    return NULL;
+}
+
+void* blocking_thread(void* arg) {
+    int id = *(int*)arg;
+    printf("Thread %d: Starting, will block after 0.1 seconds\n", id);
+    
+    // 先运行一小会儿
+    clock_t start = clock();
+    while((clock() - start) * 1000 / CLOCKS_PER_SEC < 100) {
+        // 短时间忙循环
+    }
+    
+    printf("Thread %d: Now blocking for 1 second...\n", id);
+    sleep(1);  // 这里会立即触发切换
+    printf("Thread %d: Woke up\n", id);
+    
+    return NULL;
+}
 
 int main() {
-    size_t page_size = sysconf(_SC_PAGESIZE); // 获取系统页大小（通常为4096字节）
-    printf("页大小: %zu 字节\n", page_size);
-
-    // 申请1字节内存（实际会按页分配）
-    void *ptr = mmap(NULL, 1, PROT_READ | PROT_WRITE, MAP_ANONYMOUS | MAP_PRIVATE, -1, 0);
-    if (ptr == MAP_FAILED) {
-        perror("mmap失败");
-        return 1;
-    }
-
-    // 检查地址是否页对齐（地址 % 页大小 == 0）
-    printf("mmap返回地址: %p\n", ptr);
-    printf("是否页对齐: %s\n", ((unsigned long)ptr % page_size == 0) ? "是" : "否");
-
-    munmap(ptr, page_size); // 释放时需用实际分配的页大小
+    pthread_t t1, t2;
+    int id1 = 1, id2 = 2;
+    
+    printf("Main: Creating threads (thread 1 = busy, thread 2 = blocking)\n");
+    
+    pthread_create(&t1, NULL, busy_thread, &id1);
+    pthread_create(&t2, NULL, blocking_thread, &id2);
+    
+    pthread_join(t1, NULL);
+    pthread_join(t2, NULL);
+    
+    printf("Main: All threads completed\n");
     return 0;
 }
