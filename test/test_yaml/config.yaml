@@ -1,0 +1,6 @@
+# 违规规则库
+illegal_rules:
+  - rm -rf /*
+  - reboot
+  - shutdown
+  - poweroff
