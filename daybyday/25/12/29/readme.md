@@ -113,8 +113,8 @@ aio 相关函数定义于 `<aio.h>`，编译时需提供 `-lrt` 链接选项（�
 **设置异步IO完成通知方式**
 
 - cb.aio_sigevent.sigev_notify = SIGEV_THREAD; 设置**完成通知策略**
-- cb.aio_sigevent.sigev_notify_function = aio_completion_handler; 设置回调函数
-- cb.aio_sigevent.sigev_value.sival_ptr = &cb; 传递回调上下文. 在 handler 中可用于：获取 aiocb，调用 aio_return(cb)，提交下一次 aio_read 形成链式异步
+- cb.aio_sigevent.sigev_notify_function = aio_completion_handler; 设置回调函数，类型为 `void (*_function) (__sigval_t)`
+- cb.aio_sigevent.sigev_value.sival_ptr = &cb; 传递回调上下文，设置回调函数的 __sigval_t 类型参数. 在 handler 中可用于：获取 aiocb，调用 aio_return(cb)，提交下一次 aio_read 形成链式异步。
 
 上述代码可以理解为：当异步 I/O 完成时，由内核（或 AIO 运行库）创建一个线程，调用指定的回调函数
 
