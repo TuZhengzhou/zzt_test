@@ -87,6 +87,57 @@ void server_thread() {
   }
 }
 
+void server_thread_review1() {
+  std::cout << "[server] thread start, pid: " << std::this_thread::get_id() << std::endl;
+
+  int listen_fd = socket(AF_INET, SOCK_STREAM, 0);
+
+  sockaddr_in addr{};
+  addr.sin_family = AF_INET;
+  addr.sin_port = htons(PORT);
+  addr.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
+  
+
+  bind(listen_fd, (sockaddr *)&addr, sizeof(addr));
+  listen(listen_fd, 1);
+
+  std::cout << "[server] waiting for connection...\n";
+
+  g_conn_fd = accept(listen_fd, nullptr, nullptr);
+  std::cout << "[server] client connected\n";
+
+  /*
+    设置FD信号驱动IO
+  */
+  int flags = fcntl(g_conn_fd, F_GETFL);
+  fcntl(g_conn_fd, F_SETFL, flags | O_ASYNC | O_NONBLOCK);
+
+  /*
+    设置FD上信号通知对象
+  */
+  fcntl(g_conn_fd, F_SETOWN, getpid());
+  
+  /*
+    准备信号动作
+  */
+  struct sigaction sa;
+  sa.sa_flags = 0;
+  sigemptyset(&sa.sa_mask);
+  sa.sa_handler = sigio_handler;
+
+  /*
+    绑定SIGIO信号动作
+  */
+  sigaction(SIGIO , &sa, nullptr);
+
+  /* 服务端主线程仅等待信号 */
+  while (true) {
+    std::cout << "[server] waiting for SIGIO...\n";
+
+    pause();
+  }
+}
+
 /* ================= Client Thread ================= */
 void client_thread() {
   std::cout << "[client] thread start, pid: " << std::this_thread::get_id() << std::endl;
@@ -128,7 +179,8 @@ int main() {
   //   pthread_sigmask(SIG_BLOCK, &set, nullptr);
   std::cout << "[main] main start, pid: " << std::this_thread::get_id() << std::endl;
 
-  std::thread srv(server_thread);
+  // std::thread srv(server_thread);
+  std::thread srv(server_thread_review1);
   std::thread cli(client_thread);
 
   cli.join();
