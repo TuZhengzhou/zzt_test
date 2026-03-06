@@ -1,0 +1,6 @@
+main:
+	g++ -std=c++17 -O2 -Wall std_thread.cpp -o std_thread -lpthread
+
+.PHONY: clean
+clean:
+	-rm -f std_thread

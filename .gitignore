@@ -1,5 +1,7 @@
 */build/
+**/.vscode/
 build/
 *.a
-middleware/redis/
+middleware/
 cpp/boost/z_file_test_900MB.bin
+dependence/
